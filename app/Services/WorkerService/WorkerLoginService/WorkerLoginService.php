@@ -29,10 +29,7 @@ class WorkerLoginService {
     public function getStatus($email){
         $worker=$this->model->whereEmail($email)->first();
         $status=$worker->status;
-        if($status==0){
-            return response()->json("your account is pending");
-        }
-        return $worker;
+        return $status;
 
     }
     protected function  createNewToken($token){
@@ -46,7 +43,9 @@ class WorkerLoginService {
     public function login($request){
         $data=$this->validation($request);
         $token=$this->isValidData($data);
-        $this->getStatus($request->email);
+        if($this->getStatus($request->email)==0){
+            return response()->json(["message"=>"your account is pending"],422);
+        }
         return $this->createNewToken($token);
 
 

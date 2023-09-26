@@ -26,10 +26,14 @@ class WorkerLoginService {
         }
         return $token;
     }
+    public function isVerified($email){
+        $worker=$this->model->whereEmail($email)->first();
+        return $worker->verified_at;
+
+    }
     public function getStatus($email){
         $worker=$this->model->whereEmail($email)->first();
-        $status=$worker->status;
-        return $status;
+        return $worker->status;
 
     }
     protected function  createNewToken($token){
@@ -43,11 +47,13 @@ class WorkerLoginService {
     public function login($request){
         $data=$this->validation($request);
         $token=$this->isValidData($data);
-        if($this->getStatus($request->email)==0){
+        if($this->isVerified($request->email)==null){
+            return response()->json(["message"=>"your account is not verified"],422);
+        }
+        elseif($this->getStatus($request->email)==0){
             return response()->json(["message"=>"your account is pending"],422);
         }
-        return $this->createNewToken($token);
-
+            return $this->createNewToken($token);
 
     }
 }

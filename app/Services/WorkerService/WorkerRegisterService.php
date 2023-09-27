@@ -3,6 +3,8 @@ namespace App\Services\WorkerService;
 use App\Http\Traits\UploadTrait;
 use App\Models\Worker;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Exception;
+use Illuminate\Support\Facades\DB;
 
 class WorkerRegisterService {
     use UploadTrait;
@@ -41,13 +43,25 @@ class WorkerRegisterService {
 
     }
     public function register($request){
-        $validate=$this->validation($request);
-        $email=$this->store($validate);
-        $worker=$this->generateToken($email);
-        $this->sendEmail();
-        return response()->json([
-            "messege" => "account has been created please check youe email"
-        ]);
+        try {
+            DB::beginTransaction();
+            $validate=$this->validation($request);
+            $email=$this->store($validate);
+            $worker=$this->generateToken($email);
+            $this->sendEmail();
+            DB::commit();
+            return response()->json([
+                "messege" => "account has been created please check youe email"
+            ]);
+        }
+        catch (Exception $ex){
+            DB::rollBack();
+            return response()->json([
+                "message" => "An error occurred while registering the account."
+            ], 500);
+
+        }
+
     }
 }
 

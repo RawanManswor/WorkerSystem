@@ -25,20 +25,48 @@ trait UploadTrait
         return  $image_path;
     }
 
-    public function uploadMulti(array $uploadedFiles, $folder = null, $disk = 'local')
+
+//    public function uploadMulti($uploadedFiles, $folder = null, $disk = 'local')
+//    {
+//        $photoPaths = [];
+//        foreach($uploadedFiles as $file) {
+//            $name=Str::random(16).$file->getClientOriginalName();
+//            $destenation=$folder.'/'.$name;
+//            Storage::disk($disk)->put( $destenation, file_get_contents($file));
+//            $pathes[]=storage_path('app/'.$destenation);
+//            $photoPaths[] = $pathes;
+//
+//        }
+//
+//        return   $photoPaths;
+//    }
+    public function uploadMulti($uploadedFiles, $folder = null, $disk = 'local')
     {
-
-        foreach($uploadedFiles as $file) {
-            $name=Str::random(16).$file->getClientOriginalName();
-            $destenation=$folder.'/'.$name;
-            Storage::disk($disk)->put( $destenation, file_get_contents($file));
-            // $pathes[]=Storage::disk($disk)->getDriver()->getAdapter()->applyPathPrefix($name);
-            // $pathes[]=Storage::url('app/'.$destenation);
-            $pathes[]=storage_path('app/'.$destenation);
-
+        $photoPaths = [];
+        $pathes = [];
+        foreach ($uploadedFiles as $file) {
+            $name = Str::random(16) . $file->getClientOriginalName();
+            $destination = $folder . '/' . $name;
+            Storage::disk($disk)->put($destination, file_get_contents($file));
+            $pathes[] = storage_path('app/' . $destination);
         }
 
-        return   $pathes;
+        $photoPaths = array_merge($photoPaths, $pathes);
+
+        return $photoPaths;
+    }
+
+    public function uploadMultiple($uploadedFiles, $folder = null, $disk = 'local')
+    {
+        $photoPaths = [];
+        foreach($uploadedFiles as $file) {
+            $name = Str::random(16) . $file->getClientOriginalName();
+            $destination = public_path($folder . '/' . $name);
+            move_uploaded_file($file, $destination);
+            $photoPaths[] = $destination;
+        }
+
+        return $photoPaths;
     }
 
     public function uploadImage($image, $folder = null){
@@ -56,4 +84,5 @@ trait UploadTrait
         $uploadedFile->move($destenation,$name);
         return $folder.'/'.$name;
     }
+
 }

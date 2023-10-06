@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AdminController,WorkerController,ClientController};
+use App\Http\Controllers\{AdminController,WorkerController,ClientController,PostController};
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +28,7 @@ Route::middleware('DbBackup')->prefix('auth')->group(function (){
         Route::post('/logout', 'logout');
         Route::post('/refresh', 'refresh');
         Route::get('/user-profile','userProfile');
+        Route::get('/verify/{token}','verify');
     });
     Route::controller(ClientController::class)->prefix('client')->group(function ($router) {
         Route::post('/login', 'login');
@@ -36,4 +37,11 @@ Route::middleware('DbBackup')->prefix('auth')->group(function (){
         Route::post('/refresh',  'refresh');
         Route::get('/user-profile','userProfile');
     });
+
+});
+    Route::post('/unauthorized',function (){
+        return response()->json(['message'=>'Unauthorized'],401)->name('login');
+    });
+Route::controller(PostController::class)->prefix('worker/post')->group(function (){
+    Route::post('/add','store')->middleware('auth:worker');
 });

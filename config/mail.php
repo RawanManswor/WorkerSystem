@@ -34,6 +34,10 @@ return [
     */
 
     'mailers' => [
+        'mailtrap' => [
+            'transport' => 'mailtrap'
+        ],
+
         'smtp' => [
             'transport' => 'smtp',
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
@@ -52,6 +56,8 @@ return [
         'mailgun' => [
             'transport' => 'mailgun',
         ],
+
+
 
         'postmark' => [
             'transport' => 'postmark',
@@ -90,6 +96,7 @@ return [
     | used globally for all e-mails that are sent by your application.
     |
     */
+
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),

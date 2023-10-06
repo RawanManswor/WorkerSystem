@@ -21,7 +21,7 @@ class WorkerController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:worker', ['except' => ['login', 'register']]);
+        $this->middleware('auth:worker', ['except' => ['login', 'register','verify']]);
     }
     /**
      * Get a JWT via given credentials.
@@ -74,6 +74,18 @@ class WorkerController extends Controller
 //            'message' => 'User successfully registered',
 //            'user' => $worker
 //        ], 201);
+    }
+
+    public function verify($token){
+        $worker=Worker::whereVerificationToken($token)->first();
+        if(!$worker){
+            return response()->json(["message"=>"this token is invalid"]);
+        }
+        $worker->verification_token=null;
+        $worker->verified_at=now();
+        $worker->save();
+        return response()->json(["message" => "your account has been verified"]);
+
     }
 
     /**

@@ -10,6 +10,10 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "nyholm/psr7": "^1.8",
+        "railsware/mailtrap-php": "^1.7",
+        "symfony/http-client": "^6.3",
+        "symfony/mailgun-mailer": "^6.3",
         "tymon/jwt-auth": "^2.0",
         "yousefpackage/lara-backup": "^1.0"
     },
@@ -59,7 +63,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",

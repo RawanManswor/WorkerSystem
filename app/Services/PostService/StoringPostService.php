@@ -19,7 +19,7 @@ class StoringPostService {
     public function storePost($request)
     {
         $data = $request->except('photos');
-        $data['worker_id']=auth()->guard('worker')->id();
+        $data['worker_id'] = auth()->guard('worker')->id();
         $post = Post::create($data);
         return $post;
 
